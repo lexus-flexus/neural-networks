@@ -69,13 +69,5 @@ public class NeuralNetwork {
         return sum;
     }
 
-    private int bipolarFunctionActivation(int sum) {
-        return sum >= 0 ? 1 : 0;
-    }
-
-    private int binaryFunctionActivation(int sum) {
-        return sum >= 0 ? 1 : -1;
-    }
-
 }
 
