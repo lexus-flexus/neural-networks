@@ -8,7 +8,7 @@ import java.util.List;
 class NeuralNetworkTest {
 
     @Test
-    void fit_bipolar() {
+    void fit_BIPOLAR() {
 
         int x[][] = new int[][]{
                 {1, 1, -1, 1, 1, 1, 1, -1, -1, 1},
@@ -23,7 +23,7 @@ class NeuralNetworkTest {
         Assertions.assertArrayEquals(expected, actual);
     }
     @Test
-    void fit_binary() {
+    void fit_BINARY() {
 
         int x[][] = new int[][]{
                 {1, 1, 0, 1, 1, 1, 1, 0, 0, 1},

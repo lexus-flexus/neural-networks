@@ -1,10 +1,14 @@
 package com.example.neuralnetworks;
 
+import com.example.neuralnetworks.activationfunctions.ActivationFunction;
+import com.example.neuralnetworks.activationfunctions.BinaryFunctionActivation;
+import com.example.neuralnetworks.activationfunctions.BipolarActivationFunction;
 import com.example.neuralnetworks.rules.BinaryRuleHebb;
 import com.example.neuralnetworks.rules.BipolarRuleHebb;
 import com.example.neuralnetworks.rules.Rule;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class NeuralNetwork {
@@ -12,6 +16,8 @@ public class NeuralNetwork {
     private final List<Neuron> neuronList = new ArrayList<>();
     private final SignalRepresentation signalRepresentation;
     private final Rule rule;
+
+    private final ActivationFunction activationFunction;
 
 /**
  *     int k - count neurons
@@ -25,8 +31,10 @@ public class NeuralNetwork {
 
         this.signalRepresentation = signalRepresentation;
         switch (signalRepresentation) {
-            case BIPOLAR -> rule = new BipolarRuleHebb();
-            case BINARY -> rule = new BinaryRuleHebb();
+            case BIPOLAR -> {rule = new BipolarRuleHebb();
+                            activationFunction = new BipolarActivationFunction();}
+            case BINARY -> {rule = new BinaryRuleHebb();
+                            activationFunction = new BinaryFunctionActivation();}
             default -> throw new IllegalStateException("Unexpected value: " + signalRepresentation);
         }
 
@@ -37,9 +45,11 @@ public class NeuralNetwork {
             neuron.setWeightToZero();
         }
 
-        for (Neuron neuron : this.neuronList) {
-            correctionWeight(neuron, x, y);
-        }
+        do {
+            for (Neuron neuron : this.neuronList) {
+                correctionWeight(neuron, x, y);
+            }
+        }while (!this.isTrained(x, y));
 
     }
 
@@ -60,21 +70,31 @@ public class NeuralNetwork {
         neuron.setWeight(w);
     }
 
-    private int summer(int[][] x) {
+    private int[] summer(int[][] x) {
 
-        int sum = 0;
+        int[] sum = new int[x.length];
         for (Neuron neuron : this.neuronList) {
 
             int[] w = neuron.getWeight();
             for (int i = 0; i < x.length; i++) {
                 for (int j = 0; j < x[i].length; j++) {
 
-                    sum += x[i][j] * w[j];
+                    sum[i] += x[i][j] * w[j];
 
                 }
             }
         }
         return sum;
+    }
+
+    private boolean isTrained(int[][] x, int[] y){
+
+        int[] sum = this.summer(x);
+        int[] actualY = new int[y.length];
+        for(int i = 0; i < y.length; i++){
+            actualY[i] = activationFunction.execute(sum[i]);
+        }
+        return Arrays.equals(y, actualY);
     }
 
 }
