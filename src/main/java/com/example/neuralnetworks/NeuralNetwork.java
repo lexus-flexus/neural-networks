@@ -13,6 +13,10 @@ public class NeuralNetwork {
     private final SignalRepresentation signalRepresentation;
     private final Rule rule;
 
+/**
+ *     int k - count neurons
+ *     int countW - count weight in neuron
+ */
     public NeuralNetwork(int k, int countW, SignalRepresentation signalRepresentation) {
 
         for (int i = 0; i < k; i++) {
@@ -29,14 +33,18 @@ public class NeuralNetwork {
     }
 
     public void fit(int[][] x, int[] y) {
-        for (Neuron neuron : neuronList) {
+        for (Neuron neuron : this.neuronList) {
             neuron.setWeightToZero();
         }
 
-        for (Neuron neuron : neuronList) {
+        for (Neuron neuron : this.neuronList) {
             correctionWeight(neuron, x, y);
         }
 
+    }
+
+    public List<Neuron> getNeuronList() {
+        return neuronList;
     }
 
     private void correctionWeight(Neuron neuron, int[][] x, int[] y) {
