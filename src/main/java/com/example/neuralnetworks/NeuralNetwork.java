@@ -16,8 +16,8 @@ public class NeuralNetwork {
     private final List<Neuron> neuronList = new ArrayList<>();
     private final SignalRepresentation signalRepresentation;
     private final Rule rule;
-
     private final ActivationFunction activationFunction;
+    private final int MAX_ITERATIONS = 10000;
 
 /**
  *     int k - count neurons
@@ -40,17 +40,29 @@ public class NeuralNetwork {
 
     }
 
-    public void fit(int[][] x, int[] y) {
+
+    public void fit(int[][] x, int[] y, int maxIterations) {
+
         for (Neuron neuron : this.neuronList) {
             neuron.setWeightToZero();
         }
-
+        int iteration = 0;
         do {
             for (Neuron neuron : this.neuronList) {
                 correctionWeight(neuron, x, y);
             }
-        }while (!this.isTrained(x, y));
+            iteration++;
+        }while (!this.isTrained(x, y) && iteration<maxIterations);
 
+    }
+    public void fit(int[][] x, int[] y){
+
+        this.fit(x,y,this.MAX_ITERATIONS);
+
+    }
+
+    public int predict(int[] x){
+        return this.activationFunction.execute(this.summer(x));
     }
 
     public List<Neuron> getNeuronList() {
@@ -70,29 +82,32 @@ public class NeuralNetwork {
         neuron.setWeight(w);
     }
 
-    private int[] summer(int[][] x) {
+    private int summer(int[] x) {
 
-        int[] sum = new int[x.length];
+        int sum = 0;
         for (Neuron neuron : this.neuronList) {
 
             int[] w = neuron.getWeight();
             for (int i = 0; i < x.length; i++) {
-                for (int j = 0; j < x[i].length; j++) {
 
-                    sum[i] += x[i][j] * w[j];
+                sum += x[i] * w[i];
 
-                }
             }
+
         }
         return sum;
     }
 
     private boolean isTrained(int[][] x, int[] y){
 
-        int[] sum = this.summer(x);
+        int[] sum = new int[x.length];
+        for(int i = 0; i < sum.length; i++){
+            sum[i] = this.summer(x[i]);
+        }
+
         int[] actualY = new int[y.length];
         for(int i = 0; i < y.length; i++){
-            actualY[i] = activationFunction.execute(sum[i]);
+            actualY[i] = this.activationFunction.execute(sum[i]);
         }
         return Arrays.equals(y, actualY);
     }
