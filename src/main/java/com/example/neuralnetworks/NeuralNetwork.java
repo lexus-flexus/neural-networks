@@ -37,7 +37,6 @@ public class NeuralNetwork {
                             activationFunction = new BinaryFunctionActivation();}
             default -> throw new IllegalStateException("Unexpected value: " + signalRepresentation);
         }
-
     }
 
 
@@ -53,12 +52,11 @@ public class NeuralNetwork {
             }
             iteration++;
         }while (!this.isTrained(x, y) && iteration<maxIterations);
-
     }
+
     public void fit(int[][] x, int[] y){
 
         this.fit(x,y,this.MAX_ITERATIONS);
-
     }
 
     public int predict(int[] x){
@@ -91,9 +89,7 @@ public class NeuralNetwork {
             for (int i = 0; i < x.length; i++) {
 
                 sum += x[i] * w[i];
-
             }
-
         }
         return sum;
     }
@@ -111,6 +107,5 @@ public class NeuralNetwork {
         }
         return Arrays.equals(y, actualY);
     }
-
 }
 
