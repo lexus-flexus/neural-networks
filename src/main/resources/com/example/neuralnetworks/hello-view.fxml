@@ -33,12 +33,12 @@
         <VBox spacing="20">
             <HBox spacing="20">
                 <VBox spacing="20">
-                    <Button fx:id="saveX1" mnemonicParsing="false" text="Запомнить X1" />
-                    <Button fx:id="saveX2" mnemonicParsing="false" text="Запомнить X2" />
+                    <Button fx:id="saveX1" onAction="#saveX1" mnemonicParsing="false" text="Запомнить X1" />
+                    <Button fx:id="saveX2" onAction="#saveX2" mnemonicParsing="false" text="Запомнить X2" />
                 </VBox>
                 <VBox spacing="20">
-                    <Button fx:id="loadX1" mnemonicParsing="false" text="X1" />
-                    <Button fx:id="loadX2" mnemonicParsing="false" text="X2" />
+                    <Button fx:id="loadX1" onAction="#loadX1" mnemonicParsing="false" text="X1" />
+                    <Button fx:id="loadX2" onAction="#loadX2" mnemonicParsing="false" text="X2" />
                 </VBox>
             </HBox>
             <Button fx:id="clearBtn" mnemonicParsing="false" text="Очистить" />
@@ -53,6 +53,6 @@
             </HBox>
         </VBox>
 
-        <Button fx:id="resetBtn" mnemonicParsing="false" text="Сбросить все" />
+        <Button fx:id="resetBtn" onAction="#initialize" mnemonicParsing="false" text="Сбросить все" />
     </HBox>
 </AnchorPane>
