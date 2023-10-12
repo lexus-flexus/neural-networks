@@ -24,7 +24,7 @@
             <TextField fx:id="textField" prefWidth="150" />
             <Button fx:id="myButton" text="Send to TextField" />
 
-            <HBox spacing="5" AnchorPane.bottomAnchor="50">
+            <HBox spacing="5">
                 <ChoiceBox fx:id="choiceBox" />
                 <Button onAction="#resize" text="Resize" />
             </HBox>
@@ -37,8 +37,8 @@
                     <Button fx:id="saveX2" mnemonicParsing="false" text="Запомнить X2" />
                 </VBox>
                 <VBox spacing="20">
-                    <Button fx:id="displayX1" mnemonicParsing="false" text="X1" />
-                    <Button fx:id="displayX2" mnemonicParsing="false" text="X2" />
+                    <Button fx:id="loadX1" mnemonicParsing="false" text="X1" />
+                    <Button fx:id="loadX2" mnemonicParsing="false" text="X2" />
                 </VBox>
             </HBox>
             <Button fx:id="clearBtn" mnemonicParsing="false" text="Очистить" />
