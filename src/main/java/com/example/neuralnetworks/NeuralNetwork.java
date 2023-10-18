@@ -19,22 +19,26 @@ public class NeuralNetwork {
     private final ActivationFunction activationFunction;
     private final int MAX_ITERATIONS = 10000;
 
-/**
- *     int k - count neurons
- *     int countW - count weight in neuron
- */
-    public NeuralNetwork(int k, int countW, SignalRepresentation signalRepresentation) {
+    /**
+     * int k - count neurons
+     * int countW - count weight in neuron
+     */
+    public NeuralNetwork(int countNeurons, int lengthWeight, SignalRepresentation signalRepresentation) {
 
-        for (int i = 0; i < k; i++) {
-            this.neuronList.add(new Neuron(countW));
+        for (int i = 0; i < countNeurons; i++) {
+            this.neuronList.add(new Neuron(lengthWeight));
         }
 
         this.signalRepresentation = signalRepresentation;
         switch (signalRepresentation) {
-            case BIPOLAR -> {rule = new BipolarRuleHebb();
-                            activationFunction = new BipolarActivationFunction();}
-            case BINARY -> {rule = new BinaryRuleHebb();
-                            activationFunction = new BinaryFunctionActivation();}
+            case BIPOLAR -> {
+                rule = new BipolarRuleHebb();
+                activationFunction = new BipolarActivationFunction();
+            }
+            case BINARY -> {
+                rule = new BinaryRuleHebb();
+                activationFunction = new BinaryFunctionActivation();
+            }
             default -> throw new IllegalStateException("Unexpected value: " + signalRepresentation);
         }
     }
@@ -51,15 +55,15 @@ public class NeuralNetwork {
                 correctionWeight(neuron, x, y);
             }
             iteration++;
-        }while (!this.isTrained(x, y) && iteration<maxIterations);
+        } while (!this.isTrained(x, y) && iteration < maxIterations);
     }
 
-    public void fit(int[][] x, int[] y){
+    public void fit(int[][] x, int[] y) {
 
-        this.fit(x,y,this.MAX_ITERATIONS);
+        this.fit(x, y, this.MAX_ITERATIONS);
     }
 
-    public int predict(int[] x){
+    public int predict(int[] x) {
         return this.activationFunction.execute(this.summer(x));
     }
 
@@ -94,15 +98,15 @@ public class NeuralNetwork {
         return sum;
     }
 
-    private boolean isTrained(int[][] x, int[] y){
+    private boolean isTrained(int[][] x, int[] y) {
 
         int[] sum = new int[x.length];
-        for(int i = 0; i < sum.length; i++){
+        for (int i = 0; i < sum.length; i++) {
             sum[i] = this.summer(x[i]);
         }
 
         int[] actualY = new int[y.length];
-        for(int i = 0; i < y.length; i++){
+        for (int i = 0; i < y.length; i++) {
             actualY[i] = this.activationFunction.execute(sum[i]);
         }
         return Arrays.equals(y, actualY);

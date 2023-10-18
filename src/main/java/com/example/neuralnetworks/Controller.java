@@ -1,11 +1,16 @@
 package com.example.neuralnetworks;
 
+import com.example.neuralnetworks.activationfunctions.ActivationFunction;
+import com.example.neuralnetworks.activationfunctions.ActivationFunctions;
+import com.example.neuralnetworks.activationfunctions.BinaryFunctionActivation;
+import com.example.neuralnetworks.activationfunctions.BipolarActivationFunction;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
@@ -15,6 +20,10 @@ import java.util.Arrays;
 
 public class Controller {
 
+    @FXML
+    public ChoiceBox<String> functionActivation;
+    @FXML
+    public Label answer;
     @FXML
     private ChoiceBox<Integer> choiceBox;
     @FXML
@@ -26,6 +35,7 @@ public class Controller {
     private int[][] gridData;
     private int[][][] vectorX;
     private final int countImages = 2;
+    private NeuralNetwork neuralNetwork;
     private final double gridWidth = 300.0;
     private final double gridHeight = 300.0;
 
@@ -34,18 +44,22 @@ public class Controller {
         ObservableList<Integer> availableChoices = FXCollections.observableArrayList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
         choiceBox.setItems(availableChoices);
         choiceBox.setValue(5);
+        ObservableList<String> availableFunctionActivation = FXCollections.observableArrayList(ActivationFunctions.getAllEnumStringValues());
+        functionActivation.setItems(availableFunctionActivation);
+        functionActivation.setValue(availableFunctionActivation.get(0));
+
         grid.setPrefHeight(gridHeight);
+        grid.setMaxHeight(gridHeight);
         grid.setPrefWidth(gridWidth);
-
-
+        grid.setMaxWidth(gridWidth);
         resize();
-
         myButton.setOnAction(e -> {
             StringBuilder builder = new StringBuilder();
             for (int[] row : gridData)
                 builder.append(Arrays.toString(row)).append('\n');
             textField.setText(builder.toString());
         });
+
     }
     @FXML
     public void resize() {
@@ -57,6 +71,8 @@ public class Controller {
         gridData = new int[gridSizeHeight][gridSizeWidth];
         double rectangleWidth = gridWidth / gridSizeWidth;
         double rectangleHeight = gridHeight / gridSizeHeight;
+
+        neuralNetwork = new NeuralNetwork(1, gridSizeHeight*gridSizeWidth + 1, SignalRepresentation.BINARY);
 
         for (int i = 0; i < gridSizeHeight; i++) {
             for (int j = 0; j < gridSizeWidth; j++) {
@@ -107,6 +123,38 @@ public class Controller {
             gridData = copyArray(vectorX[1]);
             updateGrid(gridData);
         }
+    }
+
+    @FXML
+    public void fit(){
+
+        for(int[][] vector: vectorX){
+            if(vector == null) throw new NullPointerException();
+        }
+
+        int[][] vectorsX = new int[vectorX.length][];
+        for(int i = 0; i < vectorX.length; i++){
+            vectorsX[i] = changeMatrixToVectorForNeuralNetwork(vectorX[i]);
+        }
+        int[] vectorY = new int[]{1, 0};
+        neuralNetwork.fit(vectorsX,vectorY);
+    }
+    @FXML
+    public void predict(){
+
+        int[] vector = changeMatrixToVectorForNeuralNetwork(gridData);
+        answer.setText(String.valueOf(neuralNetwork.predict(vector)));
+
+    }
+    private int[] changeMatrixToVectorForNeuralNetwork(int[][] x){
+        int[] newVector = new int[x.length * x[0].length + 1];
+        newVector[0] = 1;
+        for(int i = 0; i < x.length; i++){
+          for(int j = 0; j < x[i].length; j++){
+              newVector[i * x[i].length + j + 1] = x[i][j];
+          }
+        }
+        return newVector;
     }
 
     private void updateGrid(int[][] gridData){

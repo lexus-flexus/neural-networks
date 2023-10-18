@@ -46,9 +46,9 @@
 
         <VBox spacing="10">
             <ChoiceBox fx:id="functionActivation" prefWidth="150.0" />
-            <Button fx:id="fitBtn" mnemonicParsing="false" text="Обучить" />
+            <Button fx:id="fitBtn" onAction="#fit" mnemonicParsing="false" text="Обучить" />
             <HBox spacing="20">
-                <Button fx:id="predictBtn" mnemonicParsing="false" text="Распознать" />
+                <Button fx:id="predictBtn" onAction="#predict" mnemonicParsing="false" text="Распознать" />
                 <Label fx:id="answer" alignment="CENTER" prefHeight="25" prefWidth="80.0" style="-fx-border-color: black;" text="Label" />
             </HBox>
         </VBox>
